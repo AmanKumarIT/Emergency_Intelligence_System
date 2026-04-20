@@ -1,0 +1,27 @@
+# environments
+venv/
+node_modules/
+
+# python cache
+__pycache__/
+*.pyc
+
+# env files
+.env
+.env.*
+
+# models
+*.pt
+
+# media
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.png
+
+# uploads
+uploads/
+
+# logs
+*.log

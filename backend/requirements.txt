@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+ultralytics
+opencv-python
+motor
+redis
+websockets
+python-dotenv
+python-multipart
+pydantic
