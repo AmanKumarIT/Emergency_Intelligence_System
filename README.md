@@ -71,6 +71,28 @@ graph LR
 
 ---
 
+## 🎯 Chosen Vertical: Public Safety & Emergency Response
+The system is tailored for the **Smart City & Large Venue Management** vertical. It addresses the critical need for automated, real-time surveillance in high-density environments like stadiums, transit hubs, and public squares where human monitoring is prone to fatigue and error.
+
+## 🧠 Approach and Logic
+The solution follows a **Proactive Surveillance Approach**:
+1.  **Spatial Segmentation**: Instead of analyzing the frame as a whole, we divide it into a 3x3 grid to detect localized bottlenecks.
+2.  **Temporal Analysis**: We track movement patterns across consecutive frames to distinguish between normal crowd flow and erratic "panic" movements.
+3.  **Tiered Alerting**: Alerts are categorized by severity (Low, Medium, High) based on cumulative density and movement anomalies, allowing for prioritized human intervention.
+
+## ⚙️ How the Solution Works
+1.  **Ingestion Layer**: Supports diverse inputs (Images, MP4, RTSP, Webcam) using OpenCV.
+2.  **Inference Layer**: An optimized YOLOv8n model runs on the FastAPI backend, detecting persons and extracting coordinates.
+3.  **Intelligence Layer**: A custom Decision Engine calculates zone-wise density percentages and detects movement vectors.
+4.  **Presentation Layer**: A React-based dashboard consumes real-time data via WebSockets, rendering a dynamic heatmap and a live MJPEG stream with bounding box overlays.
+
+## 📝 Any Assumptions Made
+-   **Camera Placement**: It is assumed that cameras are mounted at an elevated angle (bird's-eye view) to minimize occlusion and maximize detection accuracy.
+-   **Hardware**: The system assumes the host machine has at least a modern multi-core CPU (or NVIDIA GPU) to maintain a minimum of 15-20 FPS for real-time processing.
+-   **Network**: For RTSP streams, a stable low-latency network connection is assumed to prevent frame drops in the MJPEG broadcast.
+
+---
+
 ## ⚙️ Installation & Setup
 
 ### Prerequisites
@@ -89,9 +111,36 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 # Ensure python-multipart is installed for file uploads
 pip install python-multipart
+
+### 2. Environment Configuration
+Create a `.env` file in the `backend/` directory with the following structure:
+```env
+# Cloud Database (MongoDB Atlas)
+MONGODB_URI=your_mongodb_uri
+MONGODB_DB_NAME=eis_db
+
+# Cloud Cache (Upstash Redis)
+UPSTASH_REDIS_REST_URL=your_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_token
+
+# ML Model
+YOLO_MODEL_PATH=yolov8n.pt
+YOLO_CONFIDENCE=0.35
+
+# Grid / Zone Configuration
+GRID_ROWS=3
+GRID_COLS=3
+
+# Alert Thresholds
+DENSITY_WARNING=5
+DENSITY_CRITICAL=10
+
+# Video
+UPLOAD_DIR=uploads
+STREAM_FPS=10
 ```
 
-### 2. Frontend Setup
+### 3. Frontend Setup
 ```bash
 cd frontend
 # Install dependencies
